@@ -15,8 +15,8 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   
 // For mobile devices, disable continuous and interim results to avoid repetition
 if (isMobile) {
-    recognition.continuous = true;
-    recognition.interimResults = false;
+    recognition.continuous = false;
+    recognition.interimResults = true;
 } else {
     recognition.continuous = true;
     recognition.interimResults = true;
