@@ -16,7 +16,33 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 // For mobile devices, disable continuous and interim results to avoid repetition
 if (isMobile) {
     recognition.continuous = true;
-    recognition.interimResults = false;
+recognition.interimResults = true; // Try setting to true
+
+let lastTranscript = "";
+let lastUpdateTime = 0;
+const updateDelay = 100; // milliseconds - adjust as needed
+
+recognition.onresult = function(event) {
+  let currentTranscript = event.results[event.results.length - 1][0].transcript;
+
+  const currentTime = Date.now();
+  if (currentTime - lastUpdateTime >= updateDelay || currentTranscript !== lastTranscript) {
+    let finalTranscript = "";
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+      } else {
+        finalTranscript += event.results[i][0].transcript; // Or handle interim differently
+      }
+    }
+
+    if (finalTranscript.trim() !== "") { // Update only if there's new content
+      document.getElementById('yourTextField').value = finalTranscript; // Update your UI element
+      lastTranscript = finalTranscript;
+      lastUpdateTime = currentTime;
+    }
+  }
+};
 } else {
     recognition.continuous = true;
     recognition.interimResults = true;
