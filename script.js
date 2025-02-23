@@ -16,7 +16,6 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 // For mobile devices, disable continuous and interim results to avoid repetition
 if (isMobile) {
     recognition.continuous = true;
-<<<<<<< HEAD
 recognition.interimResults = true; // Try setting to true
 
 let lastTranscript = "";
@@ -44,9 +43,6 @@ recognition.onresult = function(event) {
     }
   }
 };
-=======
-    recognition.interimResults = true;
->>>>>>> 0cb96c1a9a0627523c279c9d38256399c3669821
 } else {
     recognition.continuous = true;
     recognition.interimResults = true;
