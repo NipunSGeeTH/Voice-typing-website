@@ -14,17 +14,37 @@
     font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-body {
+#middle {
+    
     background: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    min-height: 100vh;
+    min-height: 50vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 0px;
+    
+}
+#navbar{
+    display: flex;
+    
+    justify-content: space-between;
+    align-items: center;
+   
+    background-color: #d7fdf8;
+    padding-right: 2vw;
+    width: 100vw;
+    height: 10vh;
+
 }
 
+.logo-image{
+    
+    width: auto;
+    height: 10vh;
+    scale: 150%;
+}
 .container {
     background: white;
     padding: 2rem;
@@ -33,6 +53,8 @@ body {
     width: 100%;
     max-width: 800px;
     animation: fadeIn 0.5s ease-out;
+    padding-top: 0px;
+    margin-top: 2vh;
 }
 
 .app-header {
@@ -132,6 +154,10 @@ body {
 .output-container {
     position: relative;
 }
+body{
+    max-height: 100vh;
+    margin: 0%;
+}
 
 textarea {
     width: 100%;
@@ -174,6 +200,20 @@ textarea:focus {
     display: none;
 }
 
+#dark-mode{
+    height: 6vh;
+    border-top-left-radius: 50px;
+    border-end-start-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-top-right-radius:50px ;
+    width: 90px;
+    color: #22c55e;
+    background: linear-gradient(135deg, #1f1f1f, #002bff);
+
+}
+#dark-mode:hover{
+    background: linear-gradient(135deg, #ff0b0b, #002bff);
+}
 
 @keyframes pulse {
     0% {
@@ -217,4 +257,12 @@ textarea:focus {
     .app-header h1 {
         font-size: 2rem;
     }
+    .logo-image{
+        height: 8vh;
+        
+    }
+    #navbar{
+        height: 8vh;
+    }
+
 }
