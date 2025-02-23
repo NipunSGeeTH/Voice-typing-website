@@ -18,7 +18,7 @@ if (isMobile) {
     recognition.continuous = true; // Change to false for mobile
     recognition.interimResults = true; // Change to false for mobile
     // Add a longer speechEndTimeout
-    recognition.speechEndTimeout = 10; // 1 second
+    recognition.speechEndTimeout = 0; // 1 second
 } else {
     recognition.continuous = true;
     recognition.interimResults = true;
