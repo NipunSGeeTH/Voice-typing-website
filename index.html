@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Typing Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1>Voice Typing Assistant <i class="fas fa-microphone"></i></h1>
+            <p class="subtitle">Your thoughts, spoken into text</p>
+        </div>
+
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="en-US">
+                <i class="fas fa-language"></i> English
+            </button>
+            <button class="lang-btn" data-lang="si-LK">
+                <i class="fas fa-language"></i>සිංහල (Sinhala)
+            </button>
+         
+
+
+        </div>
+
+        <div class="control-panel">
+            <button id="start-btn" class="control-btn">
+                <i class="fas fa-play"></i> Start
+            </button>
+            <button id="stop-btn" class="control-btn">
+                <i class="fas fa-stop"></i> Stop
+            </button>
+            <button id="clear-btn" class="control-btn">
+                <i class="fas fa-trash"></i> Clear
+            </button>
+        </div>
+
+        <div class="status-container">
+            <div class="status-indicator"></div>
+            <p id="status">Click Start to begin speaking...</p>
+        </div>
+
+        <div class="output-container">
+            <textarea id="output" placeholder="Your speech will appear here..." rows="10"></textarea>
+            <button id="copy-btn" class="copy-btn">
+                <i class="fas fa-copy"></i> Copy Text
+            </button>
+        </div>
+    </div>
+   
+    <script src="script.js"></script>
+</body>
+</html>
