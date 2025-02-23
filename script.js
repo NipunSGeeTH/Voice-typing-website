@@ -10,9 +10,17 @@ const statusIndicator = document.querySelector(".status-indicator");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
-recognition.continuous = true;
-recognition.interimResults = true;
+// Check if the user is on a mobile device
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+// For mobile devices, disable continuous and interim results to avoid repetition
+if (isMobile) {
+    recognition.continuous = false;
+    recognition.interimResults = false;
+} else {
+    recognition.continuous = true;
+    recognition.interimResults = true;
+}
 let finalTranscript = "";
 let selectedLang = "en-US";
 
