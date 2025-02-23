@@ -12,10 +12,10 @@ const recognition = new SpeechRecognition();
 
 // Check if the user is on a mobile device
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
+  
 // For mobile devices, disable continuous and interim results to avoid repetition
 if (isMobile) {
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = false;
 } else {
     recognition.continuous = true;
