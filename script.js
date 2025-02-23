@@ -15,8 +15,8 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 // Modified settings for mobile devices
 if (isMobile) {
-    recognition.continuous = true; // Change to false for mobile
-    recognition.interimResults = true; // Change to false for mobile
+    recognition.continuous = false; // Change to false for mobile
+    recognition.interimResults = false; // Change to false for mobile
     // Add a longer speechEndTimeout
    recognition.speechEndTimeout = 100; 
 } else {
