@@ -12,48 +12,27 @@ const recognition = new SpeechRecognition();
 
 // Check if the user is on a mobile device
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  
-// For mobile devices, disable continuous and interim results to avoid repetition
+
+// Modified settings for mobile devices
 if (isMobile) {
-    recognition.continuous = true;
-recognition.interimResults = true; // Try setting to true
-
-let lastTranscript = "";
-let lastUpdateTime = 0;
-const updateDelay = 100; // milliseconds - adjust as needed
-
-recognition.onresult = function(event) {
-  let currentTranscript = event.results[event.results.length - 1][0].transcript;
-
-  const currentTime = Date.now();
-  if (currentTime - lastUpdateTime >= updateDelay || currentTranscript !== lastTranscript) {
-    let finalTranscript = "";
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        finalTranscript += event.results[i][0].transcript;
-      } else {
-        finalTranscript += event.results[i][0].transcript; // Or handle interim differently
-      }
-    }
-
-    if (finalTranscript.trim() !== "") { // Update only if there's new content
-      document.getElementById('yourTextField').value = finalTranscript; // Update your UI element
-      lastTranscript = finalTranscript;
-      lastUpdateTime = currentTime;
-    }
-  }
-};
+    recognition.continuous = false; // Change to false for mobile
+    recognition.interimResults = false; // Change to false for mobile
+    // Add a longer speechEndTimeout
+    recognition.speechEndTimeout = 10; // 1 second
 } else {
     recognition.continuous = true;
     recognition.interimResults = true;
 }
+
 let finalTranscript = "";
 let selectedLang = "en-US";
+let isListening = false;
 
 // Language selection
 langButtons.forEach((button) => {
     button.addEventListener("click", () => {
         recognition.stop();
+        isListening = false;
         langButtons.forEach(btn => btn.classList.remove("active"));
         button.classList.add("active");
         selectedLang = button.getAttribute("data-lang");
@@ -64,24 +43,29 @@ langButtons.forEach((button) => {
     });
 });
 
+// Modified start button handler for mobile
 startBtn.addEventListener("click", () => {
     try {
-        recognition.start();
-        updateStatus("Listening... Speak now", "listening");
-        startBtn.style.display = "none"; // Hide button
-        stopBtn.style.display="block";
-        statusIndicator.style.background="red";
+        if (!isListening) {
+            recognition.start();
+            isListening = true;
+            updateStatus("Listening... Speak now", "listening");
+            startBtn.style.display = "none";
+            stopBtn.style.display = "block";
+            statusIndicator.style.background = "red";
+        }
     } catch (error) {
         console.error("Error starting recognition:", error);
         updateStatus("Error starting recognition. Please try again.", "error");
     }
 });
 
-// Stop listening
+// Modified stop button handler
 stopBtn.addEventListener("click", () => {
     recognition.stop();
+    isListening = false;
     startBtn.style.display = "block";
-    stopBtn.style.display="none";
+    stopBtn.style.display = "none";
     updateStatus("Stopped listening", "ready");
 });
 
@@ -106,32 +90,54 @@ copyBtn.addEventListener("click", () => {
     }
 });
 
-// Recognition results
+// Modified recognition results handler
 recognition.onresult = (event) => {
-    let interimTranscript = "";
-    
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript + " ";
-        } else {
-            interimTranscript += event.results[i][0].transcript;
+    if (isMobile) {
+        // For mobile: append only final results
+        const transcript = event.results[0][0].transcript;
+        finalTranscript += transcript + " ";
+        output.value = finalTranscript;
+    } else {
+        // For desktop: handle both interim and final results
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript + " ";
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
         }
+        output.value = finalTranscript + interimTranscript;
     }
-    
-    output.value = finalTranscript + interimTranscript;
 };
 
-// Error handling
+// Modified end event handler for mobile
+recognition.onend = () => {
+    statusIndicator.classList.remove("listening");
+    if (isMobile && isListening) {
+        // Automatically restart recognition on mobile if still in listening mode
+        setTimeout(() => {
+            try {
+                recognition.start();
+            } catch (error) {
+                console.error("Error restarting recognition:", error);
+                isListening = false;
+                startBtn.style.display = "block";
+                stopBtn.style.display = "none";
+                updateStatus("Recognition ended. Please start again.", "ready");
+            }
+        }, 250);
+    }
+};
+
 recognition.onerror = (event) => {
     console.error("Recognition error:", event.error);
     updateStatus(`Error: ${event.error}`, "error");
+    isListening = false;
+    startBtn.style.display = "block";
+    stopBtn.style.display = "none";
 };
 
-recognition.onend = () => {
-    statusIndicator.classList.remove("listening");
-};
-
-// Helper function to update status with visual feedback
 function updateStatus(message, type) {
     status.innerText = message;
     statusIndicator.classList.remove("listening");
